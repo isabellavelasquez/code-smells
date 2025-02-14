@@ -14,18 +14,39 @@
   //   return totalNumber;
   // }
 
-  function getLength(jumpings: number[]): number {
-    let totalDistance = jumpings.reduce(
-      (jumpDistanceSoFar, currentJump) => jumpDistanceSoFar + currentJump
+  function getTotalJumpDistance(jumpings: number[]): number {
+    return jumpings.reduce(
+      (totalJumpDistance, currentJump) => totalJumpDistance + currentJump, 0
     );
-  
-    return totalDistance;
   }
   
   /*
     2. I detta exempel har vi fokuserat på if-statements. Se om du kan göra exemplet bättre!
     */
   
+  // class Student {
+  //   constructor(
+  //     public name: string,
+  //     public handedInOnTime: boolean,
+  //     public passed: boolean
+  //   ) {}
+  // }
+  
+  // function getStudentStatus(student: Student): string {
+  //   student.passed =
+  //     student.name == "Sebastian"
+  //       ? student.handedInOnTime
+  //         ? true
+  //         : false
+  //       : false;
+  
+  //   if (student.passed) {
+  //     return "VG";
+  //   } else {
+  //     return "IG";
+  //   }
+  // }
+
   class Student {
     constructor(
       public name: string,
@@ -34,19 +55,13 @@
     ) {}
   }
   
-  function getStudentStatus(student: Student): string {
-    student.passed =
-      student.name == "Sebastian"
-        ? student.handedInOnTime
-          ? true
-          : false
-        : false;
-  
-    if (student.passed) {
-      return "VG";
-    } else {
-      return "IG";
-    }
+  function getStudentGrade(student: Student): string {
+      if (student.handedInOnTime && student.passed) {
+        return "VG";
+      } else {
+        return "IG";
+      }
+      
   }
   
   /*
@@ -54,38 +69,40 @@
     Det finns flera code smells att identifiera här. Vissa är lurigare än andra.
     */
   
-  // class Temp {
-  //   constructor(public q: string, public where: Date, public v: number) {}
-  // }
-  
-  // function averageWeeklyTemperature(heights: Temp[]) {
-  //   let r = 0;
-  
-  //   for (let who = 0; who < heights.length; who++) {
-  //     if (heights[who].q === "Stockholm") {
-  //       if (heights[who].where.getTime() > Date.now() - 604800000) {
-  //         r += heights[who].v;
-  //       }
-  //     }
-  //   }
-  
-  //   return r / 7;
-  // }
-  class Temperature {
-    constructor(public city: string, public when: Date, public temperature: number) {}
+  class Temp {
+    constructor(public q: string, public where: Date, public v: number) {}
   }
-
-  function averageWeeklyTemperature(readings: Temperature[]) {
-    let sumOfReadings = 0;
-    let oneWeekAgo = Date.now() - 604800000;
   
-    for (let i = 0; i < readings.length; i++) {
-      if (readings[i].city === "Stockholm" && readings[i].when.getTime() > oneWeekAgo) {
-          sumOfReadings += readings[i].temperature;
+  function averageWeeklyTemperature(heights: Temp[]) {
+    let r = 0;
+  
+    for (let who = 0; who < heights.length; who++) {
+      if (heights[who].q === "Stockholm") {
+        if (heights[who].where.getTime() > Date.now() - 604800000) {
+          r += heights[who].v;
+        }
       }
     }
   
-    return sumOfReadings / 7;
+    return r / 7;
+  }
+
+
+
+  class Temperature {
+    constructor(public city: string, public date: Date, public value  : number) {}
+  }
+
+  function averageWeeklyTemperature(readings: Temperature[], city: string): number {
+    let oneWeekAgo = Date.now() - 604800000;
+    const relevantReadings = readings.filter(reading => 
+      reading.city === "Stockholm" && reading.date.getTime() > oneWeekAgo);
+
+    const sumOfReadings = readings.reduce(
+      (sumOfReadings, currentTemperature) => sumOfReadings + currentTemperature.value, 0
+    ) /7;
+
+    return sumOfReadings / relevantReadings.length
   }
   
   /*
