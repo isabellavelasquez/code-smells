@@ -95,6 +95,7 @@
 
   function averageWeeklyTemperature(readings: Temperature[], city: string): number {
     let oneWeekAgo = Date.now() - 604800000;
+
     const relevantReadings = readings.filter(reading => 
       reading.city === "Stockholm" && reading.date.getTime() > oneWeekAgo);
 
@@ -178,6 +179,29 @@
     }
   }
   
+  function presentStudents(students: Student[]) {
+    for (const student of students) {
+      if (student.handedInOnTime) {
+        let container = document.createElement("div");
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = true;
+  
+        container.appendChild(checkbox);
+        let listOfStudents = document.querySelector("ul#passedstudents");
+        listOfStudents?.appendChild(container);
+      } else {
+        let container = document.createElement("div");
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = false;
+  
+        container.appendChild(checkbox);
+        let listOfStudents = document.querySelector("ul#failedstudents");
+        listOfStudents?.appendChild(container);
+      }
+    }
+  }
   /*
     6. Skriv en funktion som skall slå ihop följande texter på ett bra sätt:
     Lorem, ipsum, dolor, sit, amet
@@ -205,24 +229,23 @@
       fler och fler parametrar behöver läggas till? T.ex. avatar eller adress. Hitta en bättre
       lösning som är hållbar och skalar bättre. 
   */
-  function createUser(
-    name: string,
-    birthday: Date,
-    email: string,
-    password: string
-  ) {
-    // Validation
-  
-    let ageDiff = Date.now() - birthday.getTime();
-    let ageDate = new Date(ageDiff);
+
+  interface User {
+    name: string;
+    birthday: Date;
+    email: string;
+    password: string;
+  }
+
+  const isOlderThan20 = (birthday: Date): boolean => {
+
+    let ageDate = new Date(Date.now() - birthday.getTime());
     let userAge = Math.abs(ageDate.getUTCFullYear() - 1970);
-  
-    console.log(userAge);
-  
-    if (!(userAge < 20)) {
-      // Logik för att skapa en användare
+    
+    if (userAge <= 20) {
+      return true;
+      createUser(user); 
     } else {
-      return "Du är under 20 år";
+      return false; 
     }
   }
-  
